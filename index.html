@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<title>Spootify</title>
+
+	<style>
+		h1 {
+  			position: relative;
+  			left: 40%;
+  			padding-bottom: 50px;
+		}
+
+		div.centered {
+			position: relative;
+			left: 30%;
+		}
+
+		div.list-group {
+			position: relative;
+			left: 20%;
+		}
+
+		li.list-group-item {
+			padding: 20px;
+			text-align: center;
+		}
+
+
+	</style>
+	<head>
+		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<script>
+			$(document).ready(function() {
+				$.get("http://localhost:3000/", function(data, status) {
+					console.log(data);
+					$("#SongList").attr("src", data[1].url);
+
+				}).fail(function() {
+					alert("Error");
+				});
+			});
+		</script>	
+	
+	</head>
+	
+	<body style="background-color: #00cc66">
+		<h1>Spootify!</h1>
+		<div class="list-group">
+			<div class="col-md-2">
+				<div class="card" style="width: 30rem;">
+					<div class="card-body">
+						<u1 class="list-group list-group-flush">
+			    			<b><li class="list-group-item">Artist: SpongeBob SquarePants</li>
+			    			<br>
+			    			<li class="list-group-item">Album: Super Bowl Halftime Show</li>
+			    		</u1>	
+			    	</div>
+			    </div>		
+			</div>
+	  	</div>
+		<div class="centered">
+			<div class="col-md-2">
+				<audio id="SongList" controls="controls" src=" ">
+				</audio>
+			</div>	
+		</div>		
+	</body>	
+
+
+</html>
