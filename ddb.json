@@ -1,0 +1,77 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+	"Description" : "AWS template to create a ddb table called music",
+
+	"Resources" : {
+		"MusicTable" : {
+			"Type" : "AWS::DynamoDB::Table",
+			"Properties" : {
+				"TableName" : "music",
+				"AttributeDefinitions" : [
+					{
+						"AttributeName" : "genre",
+						"AttributeType" : "S"
+					},
+					{
+						"AttributeName" : "artist",
+						"AttributeType" : "S"
+					},
+					{
+						"AttributeName" : "artist_album_song",
+						"AttributeType" : "S"
+					}
+				],
+				"KeySchema" : [
+					{
+						"AttributeName" : "genre",
+						"KeyType" : "HASH"
+					},
+					{
+						"AttributeName" : "artist_album_song",
+						"KeyType" : "RANGE"
+					}
+				],
+				"ProvisionedThroughput" : {
+					"ReadCapacityUnits" : 1,
+					"WriteCapacityUnits" : 1
+				},
+				"GlobalSecondaryIndexes" : [
+					{
+						"IndexName" : "artist_gsi",
+						"KeySchema" : [
+							{
+								"AttributeName" : "artist",
+								"KeyType" : "HASH"
+							}
+						],
+						"Projection" : {
+							"ProjectionType" : "ALL"
+						},
+						"ProvisionedThroughput" : {
+							"ReadCapacityUnits" : 1,
+							"WriteCapacityUnits" : 1
+						}
+					}
+				],
+				"LocalSecondaryIndexes" : [
+					{
+						"IndexName" : "genre_artist",
+						"KeySchema" : [
+							{
+								"AttributeName" : "genre",
+								"KeyType" : "HASH"
+							},
+							{
+								"AttributeName" : "artist",
+								"KeyType" : "RANGE"
+							}
+						],
+						"Projection" : {
+							"ProjectionType" : "ALL"
+						}
+					}
+				]
+			}
+		}
+	}
+}

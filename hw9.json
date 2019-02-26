@@ -1,0 +1,48 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+	"Description" : "Create EC2 Instance",
+
+	"Resources" : {
+
+		"InstanceProfile" : {
+			"Type" : "AWS::IAM::InstanceProfile",
+			"Properties" : {
+				"Path" : "/",
+				"Roles" : ["choprak-EC2-Role"]
+			}
+		},
+
+
+		"EC2Instance01" : {
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : {
+				"KeyName" : "choprak-ec2-keypair",
+				"ImageId" : "ami-0080e4c5bc078760e",
+				"InstanceType" : "t2.micro",
+				"IamInstanceProfile" : {"Ref" : "InstanceProfile"},
+				"UserData" : {
+					"Fn::Base64" : {
+						"Fn::Join" :[
+						"",
+							[
+							"#!/bin/bash -xe\n",
+							"sudo yum update -y\n",
+							"sudo yum install -y aws-cfn-bootstrap\n",
+							"sudo yum install -y cloud-init\n",
+							"sudo yum install -y git\n",
+							"curl --silent --location https://rpm.nodesource.com/setup_10.x | sudo bash - \n",
+							"sudo yum install -y nodejs\n",
+							"git clone https://github.com/krishanchopra23/Spootify.api.git \n",
+							"sudo npm install express\n",
+							"sudo npm install path\n",
+							"sudo npm install aws-sdk\n",
+							"sudo npm install node-uuid\n",
+							"node /Spootify.api/index.js\n"
+							]
+						] 
+					}
+				}
+			}
+		}
+	}
+}
