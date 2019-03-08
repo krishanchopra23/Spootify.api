@@ -60,7 +60,7 @@
 				firebase.auth().signInWithPopup(provider)
 				.then(function(result) {
 					document.getElementById("song-centered").style.visibility = "visible";
-					$.get("http://3.92.213.99:3000/genres", function(data, status) {
+					$.get("http://34.229.14.61:3000/genres", function(data, status) {
 						//console.log(data);
 						//$("#SongList").attr("src", data[1].url);
 						for (var i = 0; i < data.length; i++) {
@@ -72,7 +72,7 @@
 					var user = result.user;
 					$.ajax({
 						type: "POST",
-						url: "http://3.92.213.99:3000/save-user",
+						url: "http://34.229.14.61:3000/save-user",
 						data: {
 							id: user.uid,
 							name: user.displayName,
@@ -86,7 +86,7 @@
 			}
 
 			function listSongArtists(e) {
-				$.get(`http://3.92.213.99:3000/artists/for/genre?genre=${e.target.innerHTML}`, function(data, status) {
+				$.get(`http://34.229.14.61:3000/artists/for/genre?genre=${e.target.innerHTML}`, function(data, status) {
 					$("#SongList").empty();
 
 					for(var i = 0; i < data.length; i++) {
