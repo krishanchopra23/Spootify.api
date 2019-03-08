@@ -211,7 +211,13 @@ app.post('/save-user', function(req, res) {
   			'email': req.body.email
 
   		}
+  	}, function(err, data) {
+  		if(err) throw err;
+  		else {
+  			console.log(data);
+  		}
   	}) 
+  	res.send('OK');
 })
 
 app.listen(3000);
