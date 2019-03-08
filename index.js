@@ -7,7 +7,13 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const app = express();
+const bodyParser = require("body-parser");
 AWS.config.update({region:'us-east-1'});
+
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+app.use(bodyParser.json());
 
 var items = [];
 
@@ -190,6 +196,22 @@ app.get('/song', function(req, res) {
 			}
 		})
 	}
+})
+
+app.post('/save-user', function(req, res) {
+	res.header("Access-Control-Allow-Origin", "*");
+  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  	console.log('save-user')
+
+  	ddb.put({
+  		TableName : 'Users',
+  		Item : {
+  			'id': req.body.id,
+  			'name': req.body.name,
+  			'email': req.body.email
+
+  		}
+  	}) 
 })
 
 app.listen(3000);

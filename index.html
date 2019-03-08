@@ -38,21 +38,80 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		
+
+		<script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
+		<script>
+		  // Initialize Firebase
+		  var config = {
+		    apiKey: "AIzaSyAUG6BqJfRmzdRBEGFhQipBGa8Ocn1Hfg4",
+		    authDomain: "spootify2.firebaseapp.com",
+		    databaseURL: "https://spootify2.firebaseio.com",
+		    projectId: "spootify2",
+		    storageBucket: "spootify2.appspot.com",
+		    messagingSenderId: "522977667808"
+		  };
+		  firebase.initializeApp(config);
+		</script>
+
+		<script>
+			function googleListener() {
+				var provider = new firebase.auth.GoogleAuthProvider();
+
+				firebase.auth().signInWithPopup(provider)
+				.then(function(result) {
+					document.getElementById("song-centered").style.visibility = "visible";
+					$.get("http://3.92.213.99:3000/genres", function(data, status) {
+						//console.log(data);
+						//$("#SongList").attr("src", data[1].url);
+						for (var i = 0; i < data.length; i++) {
+							//$("#SongList").attr("src", data[1].url);
+							$("#SongList").append(`<a class="list_item" onclick="listSongArtists(event);">${data[i]}</a><br>`)
+						}
+					});
+
+					var user = result.user;
+					$.ajax({
+						type: "POST",
+						url: "http://3.92.213.99:3000/save-user",
+						data: {
+							id: user.id,
+							name: user.displayName,
+							email: user.email
+						},
+						success: function() {
+							console.log("Success!");
+						}
+					})
+				})
+			}
+
+			function listSongArtists(e) {
+				$.get(`http://3.92.213.99:3000/artists/for/genre?genre=${e.target.innerHTML}`, function(data, status) {
+					$("#SongList").empty();
+
+					for(var i = 0; i < data.length; i++) {
+						$("#SongList").append(`<p class="list_item">${data[i]}</p><br>`)
+					}
+				})
+			}
+		</script>
+
 		<script>
 			$(document).ready(function() {
-				$.get("http://3.92.213.99:3000/", function(data, status) {
-					console.log(data);
-					$("#SongList").attr("src", data[1].url);
-
-				}).fail(function() {
-					alert("Error");
-				});
+				document.getElementById("song-centered").style.visibility = "hidden";
+				googleListener();
 			});
 		</script>	
+
 	
 	</head>
-	
+	<!--
+	<div class="container" style="margin: 30 auto; width: 40%">
+		<div class="text-center">
+			<button id ="googleLogin" class="submit-button" onClick="googleListener()"> Sign In With Google </button>
+		</div>
+	</div>	
+
 	<body style="background-color: #00cc66">
 		<h1>Spootify!</h1>
 		<div class="list-group">
@@ -70,11 +129,12 @@
 			    </div>		
 			</div>
 	  	</div>
-		<div class="centered">
-			<div class="col-md-2">
-				<audio id="SongList" controls="controls" src=" ">
+	  	-->
+		<div class="centered" id="song-centered">
+			<div class="col-md-2" id="SongList">
+				<!-- <audio id="SongList" controls="controls" src=" "> 
 				</audio>
-			</div>	
+ -->			</div>	
 		</div>		
 	</body>	
 
