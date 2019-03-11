@@ -24,7 +24,7 @@ var parameters = {
 	Bucket: "choprak-privatebucket01"
 };
 
-var publisher = redis.createClient(6379, 'reporting.muemj7.ng.001.use1.cache.amazonaws.com');
+var publisher = redis.createClient(6379, 'reporting.cgh4sb.clustercfg.use1.cache.amazonaws.com');
 
 publisher.on('connect', function() {
 	console.log('Redis connected');
