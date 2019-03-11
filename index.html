@@ -17,6 +17,7 @@
 		div.list-group {
 			position: relative;
 			left: 20%;
+			font-size: 20px;
 		}
 
 		li.list-group-item {
@@ -60,19 +61,22 @@
 				firebase.auth().signInWithPopup(provider)
 				.then(function(result) {
 					document.getElementById("song-centered").style.visibility = "visible";
-					$.get("http://localhost:3000/genres", function(data, status) {
-						//console.log(data);
-						//$("#SongList").attr("src", data[1].url);
+					$.get("http://34.229.14.61:3000/genres", function(data, status) {
 						for (var i = 0; i < data.length; i++) {
-							//$("#SongList").attr("src", data[1].url);
 							$("#SongList").append(`<a class="list_item" onclick="listSongArtists(event);">${data[i]}</a><br>`)
 						}
+					});
+
+					$.get("http://34.229.14.61:3000/", function(data, status) {
+						$("#PlaySong").attr("src", data[1].url);
+					}).fail(function() {
+						alert("Error");
 					});
 
 					var user = result.user;
 					$.ajax({
 						type: "POST",
-						url: "http://localhost:3000/save-user",
+						url: "http://34.229.14.61:3000/save-user",
 						data: {
 							id: user.uid,
 							name: user.displayName,
@@ -88,7 +92,7 @@
 			function channelPublish() {
 				$.ajax({
 						type: "POST",
-						url: "http://localhost:3000/",
+						url: "http://34.229.14.61:3000/",
 						data: {
 							artist: path[0],
 							album: path[1],
@@ -101,7 +105,7 @@
 			}
 
 			function listSongArtists(e) {
-				$.get(`http://localhost:3000/artists/for/genre?genre=${e.target.innerHTML}`, function(data, status) {
+				$.get(`http://34.229.14.61:3000/artists/for/genre?genre=${e.target.innerHTML}`, function(data, status) {
 					$("#SongList").empty();
 
 					for(var i = 0; i < data.length; i++) {
@@ -115,22 +119,27 @@
 			$(document).ready(function() {
 				document.getElementById("song-centered").style.visibility = "hidden";
 				googleListener();
+
+				$('#PlaySong').on("Play", function(e) {
+					channelPublish();
+				});
+
+				$('#PlaySong').on("End", function(e) {
+					channelPublish();
+				});
 			});
 		</script>	
 
 	
 	</head>
-	<!--
-	<div class="container" style="margin: 30 auto; width: 40%">
-		<div class="text-center">
-			<button id ="googleLogin" class="submit-button" onClick="googleListener()"> Sign In With Google </button>
-		</div>
-	</div>	
-
+	
+	
 	<body style="background-color: #00cc66">
+		
 		<h1>Spootify!</h1>
-		<div class="list-group">
-			<div class="col-md-2">
+		<div class="list-group" id="song-centered">
+			<div class="col-md-2" id="SongList">
+				<!--
 				<div class="card" style="width: 30rem;">
 					<div class="card-body">
 						<u1 class="list-group list-group-flush">
@@ -141,16 +150,16 @@
 			    			<li class="list-group-item">Song: Sweet Victory</li>
 			    		</u1>	
 			    	</div>
-			    </div>		
+			    </div>	
+			    -->
 			</div>
 	  	</div>
-	  	-->
-		<div class="centered" id="song-centered">
-			<div class="col-md-2" id="SongList">
-				<button onclick="channelPublish()"> Test </button>
-				<!-- <audio id="SongList" controls="controls" src=" "> 
+	  	
+		<div class="centered">
+			<div class="col-md-2">
+				<audio id="PlaySong" controls="controls" src=" "> 
 				</audio>
- -->			</div>	
+ 			</div>	
 		</div>		
 	</body>	
 
