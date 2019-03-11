@@ -7,6 +7,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const app = express();
+const redis = require('redis');
 const bodyParser = require("body-parser");
 AWS.config.update({region:'us-east-1'});
 
@@ -16,12 +17,23 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 var items = [];
-
+var chan = 'reporting';
 var ddb = new AWS.DynamoDB.DocumentClient();
 
 var parameters = {
 	Bucket: "choprak-privatebucket01"
 };
+
+var publisher = redis.createClient(6379, 'reporting.muemj7.ng.001.use1.cache.amazonaws.com');
+
+publisher.on('connect', function() {
+	console.log('Redis connected');
+});
+
+publisher.on('error', function(err) {
+	console.log('Redis failed');
+});
+
 
 var parameters_genre_ddb = {
 	TableName: 'music',
@@ -218,6 +230,17 @@ app.post('/save-user', function(req, res) {
   		}
   	}) 
   	res.send('OK');
+})
+
+app.post('/play', function(req, res) {
+	res.header("Access-Control-Allow-Origin", "*");
+  	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+  	publisher.publish(chan, JSON.stringify({
+  		'artist': req.body.artist,
+  		'album': req.body.album,
+  		'song': req.body.song
+  	}))
 })
 
 app.listen(3000);

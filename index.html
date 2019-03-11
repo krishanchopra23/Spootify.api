@@ -60,7 +60,7 @@
 				firebase.auth().signInWithPopup(provider)
 				.then(function(result) {
 					document.getElementById("song-centered").style.visibility = "visible";
-					$.get("http://34.229.14.61:3000/genres", function(data, status) {
+					$.get("http://localhost:3000/genres", function(data, status) {
 						//console.log(data);
 						//$("#SongList").attr("src", data[1].url);
 						for (var i = 0; i < data.length; i++) {
@@ -72,7 +72,7 @@
 					var user = result.user;
 					$.ajax({
 						type: "POST",
-						url: "http://34.229.14.61:3000/save-user",
+						url: "http://localhost:3000/save-user",
 						data: {
 							id: user.uid,
 							name: user.displayName,
@@ -85,8 +85,23 @@
 				})
 			}
 
+			function channelPublish() {
+				$.ajax({
+						type: "POST",
+						url: "http://localhost:3000/",
+						data: {
+							artist: path[0],
+							album: path[1],
+							song: path[2]
+						},
+						success: function() {
+							console.log("Publish success!");
+						}
+					})
+			}
+
 			function listSongArtists(e) {
-				$.get(`http://34.229.14.61:3000/artists/for/genre?genre=${e.target.innerHTML}`, function(data, status) {
+				$.get(`http://localhost:3000/artists/for/genre?genre=${e.target.innerHTML}`, function(data, status) {
 					$("#SongList").empty();
 
 					for(var i = 0; i < data.length; i++) {
@@ -132,6 +147,7 @@
 	  	-->
 		<div class="centered" id="song-centered">
 			<div class="col-md-2" id="SongList">
+				
 				<!-- <audio id="SongList" controls="controls" src=" "> 
 				</audio>
  -->			</div>	
