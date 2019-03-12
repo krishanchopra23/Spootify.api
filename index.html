@@ -55,6 +55,7 @@
 		</script>
 
 		<script>
+			var path;
 			function googleListener() {
 				var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -68,7 +69,10 @@
 					});
 
 					$.get("http://34.229.14.61:3000/", function(data, status) {
+						console.log("Got Data");
 						$("#PlaySong").attr("src", data[1].url);
+						path = data;
+						console.log("Got Data");
 					}).fail(function() {
 						alert("Error");
 					});
@@ -120,11 +124,11 @@
 				document.getElementById("song-centered").style.visibility = "hidden";
 				googleListener();
 
-				$('#PlaySong').on("Play", function(e) {
+				$('#PlaySong').on("play", function(e) {
 					channelPublish();
 				});
 
-				$('#PlaySong').on("End", function(e) {
+				$('#PlaySong').on("ended", function(e) {
 					channelPublish();
 				});
 			});
